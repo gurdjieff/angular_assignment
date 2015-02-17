@@ -2,34 +2,92 @@
 <html lang="en" ng-app="angularProject" > 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="./styles/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./css/lib/bootstrap.min.css"/>
+    
+    <title>angular assignment</title>
+    <link rel="stylesheet" href="css/lib/fontello.css" />
+    <link rel="stylesheet" href="css/lib/normalize.css" />
+    
+    <link rel="stylesheet" href="css/index.css" />
+    
+    <link rel="stylesheet" href="css/sidebar.css" />
+
     <script>
     function login(){
         alert('ok');
     }
     </script>
-</head>
-<body>
+    <script>
+        function sideBtnClick() {
+          push();
+          // alert('ok');
+        }
+    </script>
+  </head>
+  <body>
+    
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">    
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-     
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" onclick="login()">login</a></li>
-        <li><a href="#">register</a></li>
-        
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+<div class="wrapper jsc-sidebar-content jsc-sidebar-pulled">
+  <nav>
+    <a href="#" class="icon-menu link-menu jsc-sidebar-trigger"></a>
+  </nav>
+  <div ng-view ></div>
+
+</div>
+
+
+
+    <nav class="sidebar jsc-sidebar" id="jsi-nav" data-sidebar-options="">
+  <ul class="sidebar-list" >
+    <li><a href="/" id="home-pull">Home</a></li>
+    <li><a href="#/registration" id="register-pull">Register</a></li>
+    <li><a href="#/login" id="login-pull">Login in</a></li>
+    <li><a href="" id="other-pull">Download</a></li>
+  </ul>
 </nav>
 
 
+    <script type="text/javascript" src="./js/lib/angular.min.js"></script>
+    <script type="text/javascript" src="./js/lib/angularjs.js"></script>
+    <script type="text/javascript" src="./js/app.js"></script>
+    <script type="text/javascript" src="./js/lib/angular-route.min.js"></script>   
 
-<div ng-view ></div>
-    <script type="text/javascript" src="./scripts/angular.min.js"></script>
-    <script type="text/javascript" src="./scripts/angularjs.js"></script>
-    <script type="text/javascript" src="./app/app.js"></script>
-    <script type="text/javascript" src="./scripts/angular-route.min.js"></script>   
-</body>
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/sidebar.js"></script>
+    
+    <script>
+      $('#jsi-nav').sidebar({
+        trigger: '.jsc-sidebar-trigger',
+        scrollbarDisplay: true,
+        pullCb: function () { console.log('pull'); },
+        pushCb: function () { console.log('push'); }
+      });
+
+      $('#api-push').on('click', function (e) {
+        e.preventDefault();
+        $('#jsi-nav').data('sidebar').push();
+
+      });
+      $('#register-pull').on('click', function (e) {
+        e.preventDefault();
+        $('#jsi-nav').data('sidebar').pull();
+        window.location.href = "#/registration"
+
+      });
+
+      $('#login-pull').on('click', function (e) {
+        e.preventDefault();
+        $('#jsi-nav').data('sidebar').pull();
+        window.location.href = "#/login"
+
+      });
+
+      $('#other-pull').on('click', function (e) {
+        e.preventDefault();
+        $('#jsi-nav').data('sidebar').pull();
+        window.location.href = "#/"
+
+      });
+    </script>
+  </body>
 </html>

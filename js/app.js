@@ -2,9 +2,13 @@ var app = angular.module('angularProject', ['ngRoute'])
 app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/', {
+      when('/registration', {
         templateUrl: 'app/partials/registration.html',
         controller: 'registrationController'
+      }).
+      when('/login', {
+        templateUrl: 'app/partials/login.html',
+        controller: 'loginController'
       }).
       otherwise({
         redirectTo: '/'
@@ -90,6 +94,26 @@ app.config(['$routeProvider',
             }
             return api
         }]);
+
+
+
+    app.controller('loginController', 
+        ['$scope', 'LocationService',
+        function ($scope, LocationService) {
+
+       
+
+    }]);
+
+    app.controller('homeController', 
+        ['$scope', 'LocationService',
+        function ($scope, LocationService) {
+
+       
+
+    }]);
+
+
 
     app.controller('registrationController', 
         ['$scope', 'LocationService',
