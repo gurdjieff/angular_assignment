@@ -68,6 +68,14 @@
         $('#jsi-nav').data('sidebar').push();
 
       });
+
+      $('#home-pull').on('click', function (e) {
+        e.preventDefault();
+        $('#jsi-nav').data('sidebar').pull();
+        window.location.href = "#/"
+
+      });
+
       $('#register-pull').on('click', function (e) {
         e.preventDefault();
         $('#jsi-nav').data('sidebar').pull();

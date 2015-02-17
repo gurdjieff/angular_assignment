@@ -10,6 +10,10 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/login.html',
         controller: 'loginController'
       }).
+      when('/', {
+        templateUrl: 'app/partials/homePage.html',
+        controller: 'homeController'
+      }).
       otherwise({
         redirectTo: '/'
       })
@@ -130,6 +134,21 @@ app.config(['$routeProvider',
             console.log($scope.cities);
 
         })
+
+        $scope.users = [];
+        $scope.register = function(){
+          $scope.users.push();
+          //   name: $scope.newRegister.username,
+          //   password: new_id,
+          //   hobbies: $scope.newRegister.password,
+          // })
+          console.log($scope.data)
+        }
+
+
+    
+          
+        
                     // console.log($scope.data);
 
         var that = this;
