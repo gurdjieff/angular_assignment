@@ -1,0 +1,62 @@
+[{
+    "Country": "Ireland",
+    "rank": "0",
+    "id": "country"
+  }, {
+    "Country": "UK",
+    "rank": "1",
+    "id": "country"
+
+  }, 
+  {
+    "Country": "USA",
+    "id": "country",
+    "rank": "2"
+  },{
+    "Country": "USA",
+    "id": "city",
+    "city":"washington",
+    "rank": "0"
+  },
+  {
+    "Country": "USA",
+    "id": "city",
+    "city":"Texas",
+    "rank": "1"
+  },
+  {
+    "Country": "USA",
+    "id": "city",
+    "city":"Newyork",
+    "rank": "2"
+  },{
+    "Country": "Ireland",
+    "id": "city",
+    "city":"waterford",
+    "rank": "0"
+  },{
+    "Country": "Ireland",
+    "id": "city",
+    "city":"Dublin",
+    "rank": "1"
+  },{
+    "Country": "Ireland",
+    "id": "city",
+    "city":"wexford",
+    "rank": "2"
+  },{
+    "Country": "UK",
+    "id": "city",
+    "city":"london",
+    "rank": "2"
+  },{
+    "Country": "UK",
+    "id": "city",
+    "city":"Leeds",
+    "rank": "2"
+  },{
+    "Country": "UK",
+    "id": "city",
+    "city":"oxford",
+    "rank": "2"
+  }]
