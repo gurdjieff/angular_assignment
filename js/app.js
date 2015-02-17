@@ -14,6 +14,10 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/homePage.html',
         controller: 'homeController'
       }).
+      when('/content', {
+        templateUrl: 'app/partials/content.html',
+        controller: 'contentController'
+      }).
       otherwise({
         redirectTo: '/'
       })
