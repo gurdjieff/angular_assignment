@@ -22,6 +22,10 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/content.html',
         controller: 'contentController'
       }).
+      when('/other', {
+        templateUrl: 'app/partials/other.html',
+        controller: 'otherController'
+      }).
       otherwise({
         redirectTo: '/'
       })
@@ -129,6 +133,15 @@ app.config(['$routeProvider',
         $scope.commonData.state = 0;
 
             console.log("gurdjief");
+        };
+
+
+    }]);
+
+    app.controller('otherController', 
+        ['$scope', 'LocationService','commonData',
+        function ($scope, LocationService, commonData) {
+
         };
 
 
