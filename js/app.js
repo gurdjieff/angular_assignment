@@ -14,10 +14,6 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/homePage.html',
         controller: 'homeController'
       }).
-      when('/', {
-        redirectTo: '/home'
-
-      }).
       when('/content', {
         templateUrl: 'app/partials/content.html',
         controller: 'contentController'
@@ -25,6 +21,10 @@ app.config(['$routeProvider',
       when('/other', {
         templateUrl: 'app/partials/other.html',
         controller: 'otherController'
+      }).
+      when('/', {
+        redirectTo: '/home'
+
       }).
       otherwise({
         redirectTo: '/'
@@ -35,23 +35,6 @@ app.config(['$routeProvider',
     }]
 
   )
-
-
-
-
-// app.config(
-//     ['$routeProvider', function ($routeProvider) {
-//         $routeProvider.
-//             when('/master', { template: 'master.html' }).
-//             when('/detail', { template: 'detail.html', controller: DetailController }).
-//             otherwise({ redirectTo: '/master' });
-//     }],
-//     ['$locationProvider', function ($locationProvider) {
-//         // I have tried this with both true and false and the behavior stays the same
-//         $locationProvider.html5Mode(false);
-//     }]
-// );
-
 
 
     app.filter('cityFilter', function () {
@@ -94,7 +77,6 @@ app.config(['$routeProvider',
                 ngModelController.$render = function(){
                     elm.html(ngModelController.$viewValue);
                 }
-
             }
         };
     })
@@ -134,15 +116,13 @@ app.config(['$routeProvider',
 
             console.log("gurdjief");
         };
-
-
     }]);
 
     app.controller('otherController', 
         ['$scope', 'LocationService','commonData',
         function ($scope, LocationService, commonData) {
 
-        };
+    
 
 
     }]);
@@ -158,7 +138,12 @@ app.config(['$routeProvider',
     app.controller('contentController', 
         ['$scope', 'LocationService',
         function ($scope, LocationService) {
-
+        $scope.peoples = [
+            {name: "Maria Silva Santos", city: "Sao Paulo", email: "maria@angular.com", github: "maria", description: "is a web developer and PHP Evangelist"},
+            {name: "Pedro Mendes da Silva", city: "Salvador", email: "pedro@angular.com", github: "pedro", description: "Application Developer in Information Technology"},
+            {name: "Marcos Medeiros", city: "Parnaiba", email: "joao@angular.com", github: "marcos", description: "Amazon Evangelist for Latin America. Software Engineer"},
+            {name: "Cleber Santos", city: "Barueri", email: "cleber@angular.com", github: "cleber", description: "Developer and IT consultant"},
+        ];
        
 
     }]);

@@ -1,1 +1,27 @@
-<h1>contentDetail</h1>
+	  
+    <div class="container">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="#">Home</a></li>
+          <li><a href="#/people/add">Adicionar</a></li>
+        </ul>
+        <h3 class="text-muted">AngularJS</h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>AngularJS</h1>
+        <p class="lead">
+			HTML enhanced for web apps!
+		</p>
+		<input type="search" class="form-control" ng-model="search" placeholder="Procure por">
+      </div>
+
+      <div class="row marketing" ng-view>
+		  <i class="fa fa-refresh fa-spin fa-4x"></i>
+      </div>
+
+      <div class="footer">
+        <p>&copy; Company 2014</p>
+      </div>
+
+    </div> <!-- /container -->

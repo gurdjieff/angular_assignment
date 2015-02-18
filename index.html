@@ -36,11 +36,9 @@
     <li><a href="/" id="home-pull">Home</a></li>
     <li><a href="#/registration" id="register-pull">Register</a></li>
     <li><a ng-show="!commonData.state" href="#/login" id="login-pull">Login in</a></li>
-    <li><a ng-show="commonData.state" href="" id="other-pull">content</a></li>
+    <li><a ng-show="commonData.state" href="" id="content-pull">content</a></li>
     <li><a ng-click="loginOut()" ng-show="commonData.state" id="loginOut-pull" href="">login out</a></li>
-    <li><a id="outher-pull" href="">other</a></li>
-
-
+    <li><a href="#" id="other-pull">other</a></li>
   </ul>
 </nav>
 
@@ -87,6 +85,12 @@
 
       });
 
+      $('#content-pull').on('click', function (e) {
+        e.preventDefault();
+        $('#jsi-nav').data('sidebar').pull();
+        window.location.href = "#/content"
+      });
+
       $('#loginOut-pull').on('click', function (e) {
         e.preventDefault();
         $('#jsi-nav').data('sidebar').pull();
@@ -98,8 +102,8 @@
         e.preventDefault();
         $('#jsi-nav').data('sidebar').pull();
         window.location.href = "#/other"
-
       });
+
     </script>
   </body>
 </html>
