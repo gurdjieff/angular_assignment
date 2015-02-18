@@ -40,32 +40,11 @@ app.config(['$routeProvider',
                 }      
             })
            
-
-            console.log(filterData);
-
             return filterData;
         }
     })
 
-    app.directive('even',function(){
-        return {
-            require : 'ngModel',
-            link:function(scope,elm,attrs,ngModelController){
-                ngModelController.$parsers.push(function(viewValue){
-                    if(viewValue % 2 === 0){
-                        ngModelController.$setValidity('even',true);
-                    }else{
-                        ngModelController.$setValidity('even',false);
-                    }
-                    return viewValue;
-                });
-
-//                ngModelController.$formatters.push(function(modelValue){
-//                    return modelValue + 'kittencup';
-//                })
-            }
-        };
-    })
+    
 
     app.directive('customTextArea',function(){
         return {
@@ -93,11 +72,11 @@ app.config(['$routeProvider',
 
     app.factory('LocationService', ['$http' , function($http){
             var api = {
-                getCities : function() {  // NEW
+                getCities : function() {  
                      return $http.get('../localData/irelandCities.json')
                 },
-                getHobbies : function() {  // NEW
-                     return $http.get('../localData/irelandCities.json')
+                getHobbies : function() {  
+                     return $http.get('../localData/hobbies.json')
                 }
             }
             return api
@@ -129,84 +108,41 @@ app.config(['$routeProvider',
 
         LocationService.getCities().success(function(data){
             $scope.cities = data;
-            $scope.countries = []; 
+        })
 
-            angular.forEach(data, function(value, key){
-                $scope.countries.push(key);
-            })
-
-            console.log($scope.cities);
-
+        LocationService.getHobbies().success(function(data){
+            $scope.hobbies = data;
         })
 
         $scope.users = [];
         $scope.register = function(){
-          $scope.users.push();
-          //   name: $scope.newRegister.username,
-          //   password: new_id,
-          //   hobbies: $scope.newRegister.password,
-          // })
-          console.log($scope.data)
+          $scope.users.push({
+            username:$scope.data.username,
+            email:$scope.data.email,
+            sex:$scope.data.sex,
+            statement:$scope.data.statement,
+            blog:$scope.data.blog,
+            age:$scope.data.age
+          });
+            console.log($scope.users)
         }
-
-
-    
-          
-        
-                    // console.log($scope.data);
-
-        var that = this;
-
-        $scope.hobbies = [
-            {
-                id: 1,
-                name: 'play'
-            },
-            {
-                id: 2,
-                name: 'watch TV '
-            },
-            {
-                id: 3,
-                name: 'reading'
-            },
-        ];
-
       
-
-
         $scope.data = {
-            hobbies: [1, 2],
-            city: 3
+            // hobbies: [1, 2],
+            // city: 3
         };
 
 
         $scope.origData = angular.copy($scope.data);
 
         $scope.reset = function(){
-
-            // $scope.data = angular.copy($scope.origData);
+            $scope.data = angular.copy($scope.origData);
             // that.initCity();
             $scope.myForm.$setPristine();
+            var returnKey = confirm('register success, enter to main page');
+                if(returnKey){
+                    window.location.href = "#/content";
+                }
         }
 
-
-        
-
-        $scope.toggleHobbySelection = function (id) {
-
-            var index = -1;
-            if ($scope.data.hobbies === undefined) {
-                $scope.data.hobbies = [];
-            } else {
-                index = $scope.data.hobbies.indexOf(id);
-            }
-
-            if (index === -1) {
-                $scope.data.hobbies.push(id);
-            } else {
-                $scope.data.hobbies.splice(index, 1);
-            }
-
-        }
     }]);
