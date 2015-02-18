@@ -10,7 +10,7 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/login.html',
         controller: 'loginController'
       }).
-      when('/', {
+      when('/home', {
         templateUrl: 'app/partials/homePage.html',
         controller: 'homeController'
       }).
@@ -21,7 +21,29 @@ app.config(['$routeProvider',
       otherwise({
         redirectTo: '/'
       })
-  }])
+  }],
+    ['$locationProvider', function ($locationProvider) {
+        $locationProvider.html5Mode(true);
+    }]
+
+  )
+
+
+
+
+// app.config(
+//     ['$routeProvider', function ($routeProvider) {
+//         $routeProvider.
+//             when('/master', { template: 'master.html' }).
+//             when('/detail', { template: 'detail.html', controller: DetailController }).
+//             otherwise({ redirectTo: '/master' });
+//     }],
+//     ['$locationProvider', function ($locationProvider) {
+//         // I have tried this with both true and false and the behavior stays the same
+//         $locationProvider.html5Mode(false);
+//     }]
+// );
+
 
 
     app.filter('cityFilter', function () {
@@ -39,7 +61,6 @@ app.config(['$routeProvider',
                     }
                 }      
             })
-           
             return filterData;
         }
     })
@@ -70,6 +91,9 @@ app.config(['$routeProvider',
         };
     })
 
+
+    
+
     app.factory('LocationService', ['$http' , function($http){
             var api = {
                 getCities : function() {  
@@ -77,35 +101,76 @@ app.config(['$routeProvider',
                 },
                 getHobbies : function() {  
                      return $http.get('../localData/hobbies.json')
-                },
-
-                getCommonData : function() {  
-                    var commonData = [];
-                     return commonData;
                 }
             }
             return api
         }]);
 
+   
+    app.factory('commonData', function(){
+        return {
+            type : 'commonData',
+            users : [{username:'www', password:'111111'}],
+            state : 0
+        };
+
+    })
+
+    app.controller('indexController', 
+        ['$scope', 'LocationService','commonData',
+        function ($scope, LocationService, commonData) {
+
+        $scope.commonData = commonData;
 
 
-    app.controller('loginController', 
+
+    }]);
+
+    app.controller('homeController', 
         ['$scope', 'LocationService',
         function ($scope, LocationService) {
 
+       
 
-        // LocationService.getCommonData().success(function(data){
-        //     $scope.commonData = data;
-        // })
+    }]);
 
+    app.controller('contentController', 
+        ['$scope', 'LocationService',
+        function ($scope, LocationService) {
+
+       
+
+    }]);
+
+
+
+
+
+    app.controller('loginController', 
+        ['$scope', '$location','LocationService','commonData',
+        function ($scope,  $location, LocationService, commonData) {
+
+        $scope.commonData = commonData;
 
         $scope.login = function(){
          
+        angular.forEach($scope.commonData.users, function (obj) {
+            if ($scope.data.username === obj.username
+                && $scope.data.password === obj.password) {
+                var returnKey = confirm('login success, enter to main page');
+                if(returnKey){
+                    // window.location.href = "#/content";
+                $location.path('/home');
+            }
 
-            console.log($scope.data)
-                        console.log($scope.commonData)
+                $scope.commonData.state = 1
 
-        }
+            }
+                
+        // console.log($scope.data)
+        // console.log($scope.commonData)
+                // console.log($scope)
+            })}
        
 
     }]);
@@ -121,8 +186,8 @@ app.config(['$routeProvider',
 
 
     app.controller('registrationController', 
-        ['$scope', 'LocationService',
-        function ($scope, LocationService) {
+        ['$scope', '$location','LocationService','commonData',
+        function ($scope,$location, LocationService, commonData) {
 
         LocationService.getCities().success(function(data){
             $scope.cities = data;
@@ -132,26 +197,27 @@ app.config(['$routeProvider',
             $scope.hobbies = data;
         })
 
-        // LocationService.getCommonData().success(function(data){
-        //     $scope.commonData = data;
-        // })
+        $scope.commonData = commonData;
+
+
+        
 
         $scope.users = [];
         $scope.register = function(){
-          $scope.users.push({
+          $scope.commonData.users.push({
             username:$scope.data.username,
             email:$scope.data.email,
             sex:$scope.data.sex,
             statement:$scope.data.statement,
             blog:$scope.data.blog,
-            age:$scope.data.age
+            age:$scope.data.age,
+            password:$scope.data.password
+
           });
-          $scope.commonData.users = $scope.users;
-            console.log($scope.users)
             $scope.myForm.$setPristine();
             var returnKey = confirm('register success, enter to main page');
                 if(returnKey){
-                    window.location.href = "#/content";
+                $location.path('#/home');
                 }
         }
       
