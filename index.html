@@ -13,14 +13,9 @@
     <link rel="stylesheet" href="css/sidebar.css" />
 
     <script>
-    function login(){
-        alert('ok');
-    }
-    </script>
-    <script>
         function sideBtnClick() {
-          push();
-          // alert('ok');
+          // push();
+          alert('ok');
         }
     </script>
   </head>
@@ -40,10 +35,11 @@
   <ul class="sidebar-list" >
     <li><a href="/" id="home-pull">Home</a></li>
     <li><a href="#/registration" id="register-pull">Register</a></li>
-    <li><a href="#/login" id="login-pull">Login in</a></li>
-    <li><a href="" id="other-pull">Download</a></li>
+    <li><a ng-show="!commonData.state" href="#/login" id="login-pull">Login in</a></li>
     <li><a ng-show="commonData.state" href="" id="other-pull">content</a></li>
-    <li><a ng-show="commonData.state" href="" id="other-pull">login out</a></li>
+    <li><a ng-click="loginOut()" ng-show="commonData.state" id="loginOut-pull" href="">login out</a></li>
+    <li><a id="outher-pull" href="">other</a></li>
+
 
   </ul>
 </nav>
@@ -74,7 +70,7 @@
       $('#home-pull').on('click', function (e) {
         e.preventDefault();
         $('#jsi-nav').data('sidebar').pull();
-        window.location.href = "#/"
+        window.location.href = "#/home"
       });
 
       $('#register-pull').on('click', function (e) {
@@ -91,10 +87,17 @@
 
       });
 
+      $('#loginOut-pull').on('click', function (e) {
+        e.preventDefault();
+        $('#jsi-nav').data('sidebar').pull();
+        window.location.href = "#/login"
+
+      });
+
       $('#other-pull').on('click', function (e) {
         e.preventDefault();
         $('#jsi-nav').data('sidebar').pull();
-        window.location.href = "#/"
+        window.location.href = "#/other"
 
       });
     </script>

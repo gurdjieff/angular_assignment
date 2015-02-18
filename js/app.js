@@ -14,6 +14,10 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/homePage.html',
         controller: 'homeController'
       }).
+      when('/', {
+        redirectTo: '/home'
+
+      }).
       when('/content', {
         templateUrl: 'app/partials/content.html',
         controller: 'contentController'
@@ -121,7 +125,11 @@ app.config(['$routeProvider',
         function ($scope, LocationService, commonData) {
 
         $scope.commonData = commonData;
+        $scope.loginOut = function(){
+        $scope.commonData.state = 0;
 
+            console.log("gurdjief");
+        };
 
 
     }]);
