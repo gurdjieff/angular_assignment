@@ -77,6 +77,11 @@ app.config(['$routeProvider',
                 },
                 getHobbies : function() {  
                      return $http.get('../localData/hobbies.json')
+                },
+
+                getCommonData : function() {  
+                    var commonData = [];
+                     return commonData;
                 }
             }
             return api
@@ -88,6 +93,19 @@ app.config(['$routeProvider',
         ['$scope', 'LocationService',
         function ($scope, LocationService) {
 
+
+        // LocationService.getCommonData().success(function(data){
+        //     $scope.commonData = data;
+        // })
+
+
+        $scope.login = function(){
+         
+
+            console.log($scope.data)
+                        console.log($scope.commonData)
+
+        }
        
 
     }]);
@@ -114,6 +132,10 @@ app.config(['$routeProvider',
             $scope.hobbies = data;
         })
 
+        // LocationService.getCommonData().success(function(data){
+        //     $scope.commonData = data;
+        // })
+
         $scope.users = [];
         $scope.register = function(){
           $scope.users.push({
@@ -124,7 +146,13 @@ app.config(['$routeProvider',
             blog:$scope.data.blog,
             age:$scope.data.age
           });
+          $scope.commonData.users = $scope.users;
             console.log($scope.users)
+            $scope.myForm.$setPristine();
+            var returnKey = confirm('register success, enter to main page');
+                if(returnKey){
+                    window.location.href = "#/content";
+                }
         }
       
         $scope.data = {
@@ -138,11 +166,7 @@ app.config(['$routeProvider',
         $scope.reset = function(){
             $scope.data = angular.copy($scope.origData);
             // that.initCity();
-            $scope.myForm.$setPristine();
-            var returnKey = confirm('register success, enter to main page');
-                if(returnKey){
-                    window.location.href = "#/content";
-                }
+            
         }
 
     }]);
