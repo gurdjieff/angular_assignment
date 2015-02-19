@@ -1,4 +1,68 @@
 
+<div class="col-sm-2">
+      
+
+    <div class="container">
+        
+    <input type="search" class="form-control" ng-model="search" placeholder="search by code"></input>
+      </div>
+
+     Sort by:
+      <select ng-model="orderProp">
+        <option value="price">price</option>
+        <option value="vibration">vibration rate</option>
+
+      </select>
+    </div> <!-- /container -->
+    
+
+
+
+
+<div class="container">
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th>code</th>
+                    <th>market</th>
+                    <th>price</th>
+                    <th>vibration rate</th>
+                    <th>operation</th>
+                </tr>
+            </thead>
+            <tbody>
+
+       
+
+
+                <tr ng-repeat="stockCode in stockCodes | filter:{code:search} | orderBy:orderProp">
+                  {{orderProp}}
+                    <td>{{stockCode.code}}</td>
+                    <td>{{stockCode.market}}</td>
+                    <td>{{stockCode.price/700 | currency:" $ "}}</td>
+                    <td>{{stockCode.vibration/100.00}}%</td>
+                    <td>
+                        <button type="button" ng-click="remove(stockCode.code)" class="btn btn-danger">remove</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        quantity
+                    </td>
+                    <td>
+                        {{stockCodes.length}}
+                    </td>
+                    <td>
+                        average price
+                    </td>
+                    <td>
+                        {{averagePrice()/700 | currency:" $ "}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p ng-show="!cart.length">您的购物车为空</p>
 <div class="container">
       <div class="header">
         <ul class="nav nav-pills pull-right">

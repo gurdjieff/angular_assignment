@@ -92,6 +92,9 @@ app.config(['$routeProvider',
                 },
                 getHobbies : function() {  
                      return $http.get('../localData/hobbies.json')
+                },
+                getStockCodes : function() {  
+                     return $http.get('../localData/stockCode.json')
                 }
             }
             return api
@@ -139,6 +142,44 @@ app.config(['$routeProvider',
     app.controller('contentController', 
         ['$scope', 'LocationService',
         function ($scope, LocationService) {
+                    $scope.stockCodes = [];
+
+         LocationService.getStockCodes().success(function(data){
+            $scope.stockCodes = data;
+        })
+
+
+        var findIndex = function (code) {
+            var index = -1;
+
+            angular.forEach($scope.stockCodes, function (item, key) {
+                if (item.code === code) {
+                    index = key;
+                    return;
+                }
+            });
+
+            return index;
+        }
+
+
+        $scope.remove = function (id) {
+            var index = findIndex(id);
+            if (index !== -1) {
+                $scope.stockCodes.splice(index, 1);
+            }
+        }
+
+        $scope.averagePrice = function () {
+            var total = 0;
+            angular.forEach($scope.stockCodes, function (item) {
+                total += item.price;
+            })
+            return total/($scope.stockCodes.length);
+        }
+
+
+
         $scope.peoples = [
             {name: "Maria Silva Santos", city: "Sao Paulo", email: "maria@angular.com", github: "maria", description: "is a web developer and PHP Evangelist"},
             {name: "Pedro Mendes da Silva", city: "Salvador", email: "pedro@angular.com", github: "pedro", description: "Application Developer in Information Technology"},
