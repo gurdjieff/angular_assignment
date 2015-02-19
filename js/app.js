@@ -58,10 +58,10 @@ app.config(['$routeProvider',
 
     
 
-    app.directive('customTextArea',function(){
+    app.directive('myTextArea',function(){
         return {
             restrict:'E',
-            template:'<div contenteditable="true"></div>',
+            template:'<textarea class="form-control" rows="3" cols="20"></textarea>',
             replace:true,
             require : 'ngModel',
             link:function(scope,elm,attrs,ngModelController){
@@ -77,6 +77,7 @@ app.config(['$routeProvider',
                 ngModelController.$render = function(){
                     elm.html(ngModelController.$viewValue);
                 }
+
             }
         };
     })
