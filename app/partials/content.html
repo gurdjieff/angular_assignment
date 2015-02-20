@@ -21,7 +21,7 @@
 <p><strong>Page:</strong> {{tableParams.page()}}
     <p><strong>Count per page:</strong> {{tableParams.count()}}
 
-
+        <!-- {{data}} -->
         <table ng-table="tableParams" class="table ng-table-responsive">            <thead>
                 <tr>
                     <th>code</th>
@@ -33,8 +33,7 @@
             </thead>
             <tbody>
 
-
-                <tr ng-repeat="stockCode in $data | filter:{code:search} | orderBy:orderProp">
+                <tr ng-repeat="stockCode in data | filter:{code:search} | orderBy:orderProp">
                   {{orderProp}}
                     <td>{{stockCode.code}}</td>
                     <td>{{stockCode.market}}</td>

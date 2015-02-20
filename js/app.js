@@ -209,8 +209,11 @@ app.config(['$routeProvider',
         var findIndex = function (code) {
             var index = -1;
 
-            angular.forEach($scope.stockCodes, function (item, key) {
+            angular.forEach($scope.commonData.stockCodes, function (item, key) {
                 if (item.code === code) {
+                    console.log(code)
+                                        console.log(key)
+
                     index = key;
                     return;
                 }
@@ -219,11 +222,29 @@ app.config(['$routeProvider',
             return index;
         }
 
+        var resetTableParams = function(){
+
+            return {
+                    total: $scope.data.length, // length of data
+                    getData: function($defer, params) {
+                        $defer.resolve($scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
+            }
+        }
 
         $scope.remove = function (id) {
             var index = findIndex(id);
+            console.log(index)
             if (index !== -1) {
                 $scope.commonData.stockCodes.splice(index, 1);
+
+
+
+                $scope.tableParams = new NgTableParams({
+                page: 1,            // show first page
+                count: 10           // count per page
+            }, 
+               resetTableParams()); 
             }
         }
 
@@ -234,40 +255,6 @@ app.config(['$routeProvider',
             })
             return total/($scope.commonData.stockCodes.length);
         }
-
-
-        // $scope.data = [{name: "Moroni", age: 50},
-        //                 {name: "Tiancum", age: 43},
-        //                 {name: "Jacob", age: 27},
-        //                 {name: "Nephi", age: 29},
-        //                 {name: "Enos", age: 34},
-        //                 {name: "Tiancum", age: 43},
-        //                 {name: "Jacob", age: 27},
-        //                 {name: "Nephi", age: 29},
-        //                 {name: "Enos", age: 34},
-        //                 {name: "Tiancum", age: 43},
-        //                 {name: "Jacob", age: 27},
-        //                 {name: "Nephi", age: 29},
-        //                 {name: "Enos", age: 34},
-        //                 {name: "Tiancum", age: 43},
-        //                 {name: "Jacob", age: 27},
-        //                 {name: "Nephi", age: 29},
-        //                 {name: "Enos", age: 34}];
-
-            // $scope.tableParams = new NgTableParams({
-            //     page: 1,            // show first page
-            //     count: 10           // count per page
-            // }, {
-            //     total: $scope.data.length, // length of data
-            //     getData: function($defer, params) {
-            //         $defer.resolve($scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            //     }
-            // });
-
-
-
-
-
 
     }]);
 
