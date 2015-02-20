@@ -1,4 +1,4 @@
-var app = angular.module('angularProject', ['ngRoute'])
+var app = angular.module('angularProject', ['ngRoute', 'angular-loading-bar'])
 app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
@@ -37,6 +37,10 @@ app.config(['$routeProvider',
     ['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode(true);
     }]
+
+    ,['$cfpLoadingBarProvider',function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.includeSpinner = true;
+  }]
 
   )
 
@@ -138,8 +142,8 @@ app.config(['$routeProvider',
 
 
     app.controller('newController', 
-        ['$scope','$location', 'LocationService','commonData',
-        function ($scope, $location, LocationService, commonData) {
+        ['$scope','$location', 'LocationService','commonData','cfpLoadingBar',
+        function ($scope, $location, LocationService, commonData,cfpLoadingBar) {
 
         $scope.commonData = commonData;
         $scope.createNewOne = function(){
@@ -151,8 +155,11 @@ app.config(['$routeProvider',
             price:$scope.data.price*700,
             vibration:$scope.data.vibration*100,
           });
-        // });
-         $location.path('/content');
+        cfpLoadingBar.start();
+        setTimeout(function(){
+             $location.path('/content');
+                cfpLoadingBar.complete();
+             }, 1000);
         };
 
     
@@ -213,9 +220,6 @@ app.config(['$routeProvider',
             })
             return total/($scope.commonData.stockCodes.length);
         }
-
-       
-
     }]);
 
 
@@ -223,8 +227,8 @@ app.config(['$routeProvider',
 
 
     app.controller('loginController', 
-        ['$scope', '$location','LocationService','commonData',
-        function ($scope,  $location, LocationService, commonData) {
+        ['$scope', '$location','LocationService','commonData','cfpLoadingBar',
+        function ($scope,  $location, LocationService, commonData,cfpLoadingBar) {
 
         $scope.commonData = commonData;
 
@@ -233,11 +237,14 @@ app.config(['$routeProvider',
         angular.forEach($scope.commonData.users, function (obj) {
             if ($scope.data.username === obj.username
                 && $scope.data.password === obj.password) {
-                var returnKey = confirm('login success, enter to main page');
-                if(returnKey){
-                $location.path('/home');
-            }
+
                 $scope.commonData.state = 1
+                cfpLoadingBar.start();
+                setTimeout(function(){
+                 $location.path('/content');
+                    cfpLoadingBar.complete();
+                 }, 1000);
+
             }
             })}
        
@@ -255,8 +262,8 @@ app.config(['$routeProvider',
 
 
     app.controller('registrationController', 
-        ['$scope', '$location','LocationService','commonData',
-        function ($scope,$location, LocationService, commonData) {
+        ['$scope', '$location','LocationService','commonData','cfpLoadingBar',
+        function ($scope,$location, LocationService, commonData,cfpLoadingBar) {
 
         LocationService.getCities().success(function(data){
             $scope.cities = data;
@@ -284,10 +291,12 @@ app.config(['$routeProvider',
 
           });
             // $scope.myForm.$setPristine();
-            var returnKey = confirm('register success, enter to main page');
-                if(returnKey){
-                $location.path('#/home');
-            }
+            $scope.commonData.state = 1
+             cfpLoadingBar.start();
+                setTimeout(function(){
+                 $location.path('/content');
+                    cfpLoadingBar.complete();
+        }, 1000);
         }
       
         $scope.data = {
