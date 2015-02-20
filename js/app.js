@@ -1,4 +1,5 @@
-var app = angular.module('angularProject', ['ngRoute', 'angular-loading-bar'])
+
+var app = angular.module('angularProject', ['ngRoute', 'angular-loading-bar','ngTable'])
 app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
@@ -176,10 +177,12 @@ app.config(['$routeProvider',
     }]);
 
 
+            
+
 
     app.controller('contentController', 
-        ['$scope', 'LocationService','commonData',
-        function ($scope, LocationService, commonData) {
+        ['$scope', 'LocationService','commonData','NgTableParams',
+        function ($scope, LocationService, commonData, NgTableParams) {
 
         $scope.commonData = commonData;
         $scope.stockCodes = [];
@@ -188,7 +191,18 @@ app.config(['$routeProvider',
             if ($scope.commonData.stockCodes.length == 0) {
                 $scope.commonData.stockCodes = data;
             };
-            $scope.stockCodes = $scope.commonData.stockCodes;
+            $scope.data = $scope.commonData.stockCodes;
+
+
+            $scope.tableParams = new NgTableParams({
+                page: 1,            // show first page
+                count: 10           // count per page
+            }, {
+                total: $scope.data.length, // length of data
+                getData: function($defer, params) {
+                    $defer.resolve($scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                }
+            });
         })
 
 
@@ -220,6 +234,41 @@ app.config(['$routeProvider',
             })
             return total/($scope.commonData.stockCodes.length);
         }
+
+
+        // $scope.data = [{name: "Moroni", age: 50},
+        //                 {name: "Tiancum", age: 43},
+        //                 {name: "Jacob", age: 27},
+        //                 {name: "Nephi", age: 29},
+        //                 {name: "Enos", age: 34},
+        //                 {name: "Tiancum", age: 43},
+        //                 {name: "Jacob", age: 27},
+        //                 {name: "Nephi", age: 29},
+        //                 {name: "Enos", age: 34},
+        //                 {name: "Tiancum", age: 43},
+        //                 {name: "Jacob", age: 27},
+        //                 {name: "Nephi", age: 29},
+        //                 {name: "Enos", age: 34},
+        //                 {name: "Tiancum", age: 43},
+        //                 {name: "Jacob", age: 27},
+        //                 {name: "Nephi", age: 29},
+        //                 {name: "Enos", age: 34}];
+
+            // $scope.tableParams = new NgTableParams({
+            //     page: 1,            // show first page
+            //     count: 10           // count per page
+            // }, {
+            //     total: $scope.data.length, // length of data
+            //     getData: function($defer, params) {
+            //         $defer.resolve($scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            //     }
+            // });
+
+
+
+
+
+
     }]);
 
 

@@ -7,7 +7,9 @@
     <input type="search" class="form-control" ng-model="search" placeholder="search by code"></input>
       </div>
 
-     Sort by:
+     
+      <p><strong>Sort by:</strong> 
+
       <select ng-model="orderProp">
         <option value="price">price</option>
         <option value="vibration">vibration rate</option>
@@ -16,8 +18,11 @@
     
 
 <div class="container">
-        <table class="table" >
-            <thead>
+<p><strong>Page:</strong> {{tableParams.page()}}
+    <p><strong>Count per page:</strong> {{tableParams.count()}}
+
+
+        <table ng-table="tableParams" class="table ng-table-responsive">            <thead>
                 <tr>
                     <th>code</th>
                     <th>market</th>
@@ -29,7 +34,7 @@
             <tbody>
 
 
-                <tr ng-repeat="stockCode in stockCodes | filter:{code:search} | orderBy:orderProp">
+                <tr ng-repeat="stockCode in $data | filter:{code:search} | orderBy:orderProp">
                   {{orderProp}}
                     <td>{{stockCode.code}}</td>
                     <td>{{stockCode.market}}</td>
@@ -41,7 +46,7 @@
                 </tr>
                 <tr>
                     <td>
-                        quantity
+                        total quantity
                     </td>
                     <td>
                         {{commonData.stockCodes.length}}
