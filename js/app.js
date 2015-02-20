@@ -22,6 +22,10 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/other.html',
         controller: 'otherController'
       }).
+      when('/new', {
+        templateUrl: 'app/partials/createNewOne.html',
+        controller: 'newController'
+      }).
       when('/', {
         redirectTo: '/home'
 
@@ -105,7 +109,8 @@ app.config(['$routeProvider',
         return {
             type : 'commonData',
             users : [{username:'www', password:'111111'}],
-            state : 0
+            state : 0,
+            stockCodes : []
         };
 
     })
@@ -131,6 +136,30 @@ app.config(['$routeProvider',
 
     }]);
 
+
+    app.controller('newController', 
+        ['$scope','$location', 'LocationService','commonData',
+        function ($scope, $location, LocationService, commonData) {
+
+        $scope.commonData = commonData;
+        $scope.createNewOne = function(){
+            console.log($scope.data)
+            // $scope.$apply(function(){
+            $scope.commonData.stockCodes.push({
+            code:$scope.data.code,
+            market:$scope.data.market,
+            price:$scope.data.price*700,
+            vibration:$scope.data.vibration*100,
+          });
+        // });
+         $location.path('/content');
+        };
+
+    
+
+
+    }]);
+
     app.controller('homeController', 
         ['$scope', 'LocationService',
         function ($scope, LocationService) {
@@ -139,13 +168,20 @@ app.config(['$routeProvider',
 
     }]);
 
+
+
     app.controller('contentController', 
-        ['$scope', 'LocationService',
-        function ($scope, LocationService) {
-                    $scope.stockCodes = [];
+        ['$scope', 'LocationService','commonData',
+        function ($scope, LocationService, commonData) {
+
+        $scope.commonData = commonData;
+        $scope.stockCodes = [];
 
          LocationService.getStockCodes().success(function(data){
-            $scope.stockCodes = data;
+            if ($scope.commonData.stockCodes.length == 0) {
+                $scope.commonData.stockCodes = data;
+            };
+            $scope.stockCodes = $scope.commonData.stockCodes;
         })
 
 
@@ -166,26 +202,18 @@ app.config(['$routeProvider',
         $scope.remove = function (id) {
             var index = findIndex(id);
             if (index !== -1) {
-                $scope.stockCodes.splice(index, 1);
+                $scope.commonData.stockCodes.splice(index, 1);
             }
         }
 
         $scope.averagePrice = function () {
             var total = 0;
-            angular.forEach($scope.stockCodes, function (item) {
+            angular.forEach($scope.commonData.stockCodes, function (item) {
                 total += item.price;
             })
-            return total/($scope.stockCodes.length);
+            return total/($scope.commonData.stockCodes.length);
         }
 
-
-
-        $scope.peoples = [
-            {name: "Maria Silva Santos", city: "Sao Paulo", email: "maria@angular.com", github: "maria", description: "is a web developer and PHP Evangelist"},
-            {name: "Pedro Mendes da Silva", city: "Salvador", email: "pedro@angular.com", github: "pedro", description: "Application Developer in Information Technology"},
-            {name: "Marcos Medeiros", city: "Parnaiba", email: "joao@angular.com", github: "marcos", description: "Amazon Evangelist for Latin America. Software Engineer"},
-            {name: "Cleber Santos", city: "Barueri", email: "cleber@angular.com", github: "cleber", description: "Developer and IT consultant"},
-        ];
        
 
     }]);
@@ -207,17 +235,10 @@ app.config(['$routeProvider',
                 && $scope.data.password === obj.password) {
                 var returnKey = confirm('login success, enter to main page');
                 if(returnKey){
-                    // window.location.href = "#/content";
                 $location.path('/home');
             }
-
                 $scope.commonData.state = 1
-
             }
-                
-        // console.log($scope.data)
-        // console.log($scope.commonData)
-                // console.log($scope)
             })}
        
 
@@ -262,11 +283,11 @@ app.config(['$routeProvider',
             password:$scope.data.password
 
           });
-            $scope.myForm.$setPristine();
+            // $scope.myForm.$setPristine();
             var returnKey = confirm('register success, enter to main page');
                 if(returnKey){
                 $location.path('#/home');
-                }
+            }
         }
       
         $scope.data = {

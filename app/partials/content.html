@@ -11,13 +11,9 @@
       <select ng-model="orderProp">
         <option value="price">price</option>
         <option value="vibration">vibration rate</option>
-
       </select>
-    </div> <!-- /container -->
+    </div> 
     
-
-
-
 
 <div class="container">
         <table class="table" >
@@ -31,8 +27,6 @@
                 </tr>
             </thead>
             <tbody>
-
-       
 
 
                 <tr ng-repeat="stockCode in stockCodes | filter:{code:search} | orderBy:orderProp">
@@ -50,7 +44,7 @@
                         quantity
                     </td>
                     <td>
-                        {{stockCodes.length}}
+                        {{commonData.stockCodes.length}}
                     </td>
                     <td>
                         average price
@@ -58,53 +52,11 @@
                     <td>
                         {{averagePrice()/700 | currency:" $ "}}
                     </td>
+                    <td colspan="2">
+                      <a href="#/new">Create new one</a>
+                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <p ng-show="!cart.length">您的购物车为空</p>
-<div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li><a href="#">Home</a></li>
-          <li><a href="#/people/add">Adicionar</a></li>
-        </ul>
-        <h3 class="text-muted">AngularJS</h3>
-      </div>
-
-      <div class="jumbotron">
-        <h1>AngularJS</h1>
-        <p class="lead">
-      HTML enhanced for web apps!
-    </p>
-    <input type="search" class="form-control" ng-model="search" placeholder="Procure por"></input>
-      </div>
-
-      <div class="row marketing">
-      <i class="fa fa-refresh fa-spin fa-4x"></i>
-      </div>
-
-      <div class="footer">
-        <p>&copy; Company 2014</p>
-      </div>
-
-    </div> <!-- /container -->
-
-
-<div class="container" ng-repeat="people in peoples | filter:{name:search} | orderBy : -'name'">
-
- 
-<div class="row">
-   <h4 style="float: left">{{people.name}}</h4>
-   <a href="#/{{$index}}">
-     <i class="fa fa-times" style="float: right; margin: 13px 30px 0px 0px"></i>
-   </a>
-   <a href="#/people/{{$index}}">
-     <i class="fa fa-pencil" style="float: right; margin: 13px 10px 0px 0px"></i>
-  </a>
-</div>
-  <p>{{people.city}}, {{people.age}} anos</p>
-  <p><i class="fa fa-laptop"></i> {{people.email}}</p>
-  <p><i class="fa fa-github"></i> {{people.github}}</p>
-  <p>{{people.description}}</p>
-</div>
+        
