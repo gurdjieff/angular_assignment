@@ -269,20 +269,30 @@ app.config(['$routeProvider',
         $scope.commonData = commonData;
 
         $scope.login = function(){
+        var loginState = 0;
          
         angular.forEach($scope.commonData.users, function (obj) {
             if ($scope.data.username === obj.username
                 && $scope.data.password === obj.password) {
 
                 $scope.commonData.state = 1
+                loginState = 1;
                 cfpLoadingBar.start();
                 setTimeout(function(){
                  $location.path('/content');
                     cfpLoadingBar.complete();
                  }, 1000);
+                 return;
 
             }
-            })}
+            })
+        // console.log($scope.commonData.state);
+        if (loginState != 1) {
+            alert("username or password is wrong!");
+        }
+
+    };
+
        
 
     }]);
