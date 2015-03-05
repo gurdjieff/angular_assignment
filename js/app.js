@@ -123,9 +123,7 @@ app.config(['$routeProvider',
     app.controller('indexController', 
         ['$scope', 'LocationService','commonData',
         function ($scope, LocationService, commonData) {
-
-        $scope.commonData = commonData;
-        $scope.loginOut = function(){
+        Parse.initialize("tToszonEakDELCSvlhz7KuuUYaRfcHuh6u4sQMcL", "vCzJwES1RqhEvtlaxFpgJF6Kn8kpBG2XtqCuV3Nx");        $scope.loginOut = function(){
         $scope.commonData.state = 0;
 
             console.log("gurdjief");
@@ -160,7 +158,19 @@ app.config(['$routeProvider',
         setTimeout(function(){
              $location.path('/content');
                 cfpLoadingBar.complete();
-             }, 1000);
+             }, 8000);
+
+
+        var Stock = Parse.Object.extend("Stock");
+        var stock = new Stock();
+        stock.save({
+            code:$scope.data.code,
+            market:$scope.data.market,
+            price:$scope.data.price*700,
+            vibration:$scope.data.vibration*100,
+          }).then(function(object) {
+          // alert("yay! it worked");
+        });
         };
 
     
@@ -270,25 +280,46 @@ app.config(['$routeProvider',
 
         $scope.login = function(){
         var loginState = 0;
-         
-        angular.forEach($scope.commonData.users, function (obj) {
-            if ($scope.data.username === obj.username
-                && $scope.data.password === obj.password) {
 
-                $scope.commonData.state = 1
+        var user = new Parse.User();
+       cfpLoadingBar.start();
+
+        Parse.User.logIn($scope.data.username, $scope.data.password, {
+          success: function(user) {
+            alert("success");
+             $scope.commonData.state = 1
                 loginState = 1;
-                cfpLoadingBar.start();
                 setTimeout(function(){
                  $location.path('/content');
                     cfpLoadingBar.complete();
-                 }, 1000);
+                 }, 500);
                  return;
+          },
+          error: function(user, error) {
+                alert("fail: " +  " " + error.message);
+          }
+        });
 
-            }
+        
+         
+        angular.forEach($scope.commonData.users, function (obj) {
+            // if ($scope.data.username === obj.username
+            //     && $scope.data.password === obj.password) {
+
+            //     $scope.commonData.state = 1
+            //     loginState = 1;
+            //     cfpLoadingBar.start();
+            //     setTimeout(function(){
+            //      $location.path('/content');
+            //         cfpLoadingBar.complete();
+            //      }, 1000);
+            //      return;
+
+            // }
             })
         // console.log($scope.commonData.state);
         if (loginState != 1) {
-            alert("username or password is wrong!");
+            // alert("username or password is wrong!");
         }
 
     };
@@ -342,13 +373,35 @@ app.config(['$routeProvider',
                 setTimeout(function(){
                  $location.path('/content');
                     cfpLoadingBar.complete();
-        }, 1000);
+        }, 500);
+
+
+            var user = new Parse.User();
+            user.set("username", $scope.data.username);
+            user.set("password", $scope.data.password);
+            user.set("email", $scope.data.email);
+            user.set("blog", $scope.data.blog);
+            user.set("age", $scope.data.age);
+            user.set("sex", $scope.data.sex);
+            user.set("statement", $scope.data.statement);
+
+ 
+            user.signUp(null, {
+              success: function(user) {
+                alert("success");
+              },
+              error: function(user, error) {
+                alert("fail: " +  " " + error.message);
+              }
+            });
+            user.save;
+            $scope.data = {
+                // hobbies: [1, 2],
+                // city: 3
+            };
         }
-      
-        $scope.data = {
-            // hobbies: [1, 2],
-            // city: 3
-        };
+        
+        
 
 
         $scope.origData = angular.copy($scope.data);
