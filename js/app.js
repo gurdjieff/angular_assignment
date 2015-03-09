@@ -123,7 +123,9 @@ app.config(['$routeProvider',
     app.controller('indexController', 
         ['$scope', 'LocationService','commonData',
         function ($scope, LocationService, commonData) {
-        Parse.initialize("tToszonEakDELCSvlhz7KuuUYaRfcHuh6u4sQMcL", "vCzJwES1RqhEvtlaxFpgJF6Kn8kpBG2XtqCuV3Nx");        $scope.loginOut = function(){
+        Parse.initialize("tToszonEakDELCSvlhz7KuuUYaRfcHuh6u4sQMcL", "vCzJwES1RqhEvtlaxFpgJF6Kn8kpBG2XtqCuV3Nx");     
+        $scope.commonData = commonData;
+        $scope.loginOut = function(){
         $scope.commonData.state = 0;
 
             console.log("gurdjief");
