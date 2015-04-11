@@ -1,5 +1,12 @@
 
-var app = angular.module('angularProject', ['ngRoute', 'angular-loading-bar','ngTable'])
+// yourModule
+//   .config(function($httpProvider){
+//     delete $httpProvider.defaults.headers.common['X-Requested-With'];
+// });
+
+var url = "http://192.168.43.51:8080";
+
+var app = angular.module('angularProject', ['ngRoute','ngTable'])
 app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
@@ -19,9 +26,13 @@ app.config(['$routeProvider',
         templateUrl: 'app/partials/content.html',
         controller: 'contentController'
       }).
+      when('/contentInfo/:diary', {
+        templateUrl: 'app/partials/contentDetail.html',
+        controller: 'contentInfoController'
+      }).
       when('/other', {
         templateUrl: 'app/partials/other.html',
-        controller: 'otherController'
+        controller: 'PostDiaryCtrl'
       }).
       when('/new', {
         templateUrl: 'app/partials/createNewOne.html',
@@ -37,152 +48,183 @@ app.config(['$routeProvider',
   }],
     ['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode(true);
+    }],
+    ['$httpProvider',function($httpProvider){
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
     }]
-
-    ,['$cfpLoadingBarProvider',function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.includeSpinner = true;
-  }]
-
   )
 
 
-    app.filter('cityFilter', function () {
-        return function (data, value) {
-            var filterData = [];
-
-            angular.forEach(data, function (obj) {
-                if (value === "country") {
-                    if (obj.id === "country") {
-                    filterData.push(obj);
-                    }
-                } else {
-                    if (obj.id === "city" && obj.Country === value) {
-                    filterData.push(obj);
-                    }
-                }      
-            })
-            return filterData;
-        }
-    })
-
-    
-
-    app.directive('myTextArea',function(){
-        return {
-            restrict:'E',
-            template:'<textarea class="form-control" rows="3" cols="20"></textarea>',
-            replace:true,
-            require : 'ngModel',
-            link:function(scope,elm,attrs,ngModelController){
-
-
-                // view->model
-                elm.on('keyup',function(){
-                    scope.$apply(function(){
-                        ngModelController.$setViewValue(elm.html());
-                    });
-                })
-
-                ngModelController.$render = function(){
-                    elm.html(ngModelController.$viewValue);
-                }
-
-            }
-        };
-    })
-
-
-    
-
-    app.factory('LocationService', ['$http' , function($http){
+    app.factory('Service', ['$http','$location', function($http,$location){
             var api = {
-                getCities : function() {  
-                     return $http.get('../localData/irelandCities.json')
-                },
-                getHobbies : function() {  
-                     return $http.get('../localData/hobbies.json')
-                },
-                getStockCodes : function() {  
-                     return $http.get('../localData/stockCode.json')
+                login : function(scope) {  
+                     return $http.get(url+'/DiaryS/rest/api/userlog/'+scope.data.username+"/"+scope.data.password)
+                     .success(function(data) {
+                        if (data == "success") {
+                            scope.commonData.state = 100;
+                            scope.commonData.user = {
+                                username:scope.data.username
+                            }
+                           $location.path('/content');
+                        } else {
+                            alert("username or password wrong");
+                        }
+                        console.log(data);
+                }).error(function(data) {
+             console.log(user);
+                });
+         },register : function(scope) {  
+                     return $http.get(url+"/DiaryS/rest/api/registerwa/"+scope.data.username+"/"+scope.data.password)
+                     .success(function(data) {
+                        if (data == "success") {
+                            scope.commonData.state = 100;
+                            scope.commonData.user = {
+                                username:scope.data.username
+                            }
+                           $location.path('/content');
+                        } else if (data == "failed") {
+                            alert("username have been used");
+                        } else {
+                            alert("try later");
+
+                        }
+                        console.log(data);
+             }).
+          error(function(data) {
+             console.log(data);
+
+          });
+         }, getDiaries : function(scope) {  
+                     return $http.get(url+'/DiaryS/rest/api/getallDiary/'+scope.commonData.user.username)
+                     .success(function(data) {
+                    scope.diaries = data;
+                    console.log(scope.diaries);
+
+             }).
+          error(function(data) {
+             // console.log(user);
+          });
+         }, deleteDiary : function(diary_id, scope) {  
+                     return $http.get(url+'/DiaryS/rest/api/deletewa/'+diary_id)
+                     .success(function(data) {
+                    console.log(scope.diaries);
+            angular.forEach(scope.diaries, function (item, key) {
+                if (item.id == diary_id) {
+                    console.log(item)
+                    scope.diaries.splice(key, 1);       
+                    return;
                 }
-            }
+            });
+
+             }).
+          error(function(data) {
+console.log(scope.diaries);
+            angular.forEach(scope.diaries, function (item, key) {
+                if (item.id == diary_id) {
+                    console.log(item)
+                    scope.diaries.splice(key, 1);       
+                    return;
+                }
+            });          });
+         }, postDiary : function(scope) { 
+                             console.log(url+'/DiaryS/rest/api/creatediarywa/'
+                        +scope.commonData.user.username+"/"+scope.data.title
+                        +"/"+scope.data.blog);
+ 
+                     return $http.get(url+'/DiaryS/rest/api/creatediarywa/'
+                        +scope.commonData.user.username+"/"+scope.data.title
+                        +"/"+scope.data.blog)
+                     .success(function(data) {
+                   $location.path('/content');
+                    console.log(scope.diaries);
+             }).
+          error(function(data) {
+             // console.log(user);
+              $location.path('/content');
+
+          });
+         }
+
+
+
+
+        }
             return api
         }]);
 
+
+    app.controller('PostDiaryCtrl', ['$scope', '$location','Service','commonData',
+        function ($scope,$location, Service, commonData) {
+        
+        $scope.postDiary = function(){
+            console.log("register");
+            $scope.commonData = commonData;
+
+
+         //    var myDate = new Date();  
+         // console.log(myDate.toLocaleString());
+            $scope.blog = {
+            name:$scope.commonData.user.username,
+            title:$scope.data.title,
+            content:$scope.data.blog,
+            // date:myDate.toLocaleString()
+          };
+           console.log($scope.blog);
+          Service.postDiary($scope);
+        };
+    }]);
+
+    app.controller('contentInfoController', ['$scope', '$routeParams',
+           function($scope,$routeParams) {
+            $scope.info = $routeParams.diary;
+                       // console.log($scope.info);
+          }]);
+    app.controller('registrationController', 
+        ['$scope', '$location','Service','commonData',
+        function ($scope,$location, Service, commonData) {
+        $scope.commonData = commonData;
+        $scope.register = function(){
+            console.log('http://localhost:8080/DiaryS/rest/api/registerwa/'+$scope.data.username+"/"+$scope.data.password);
+            Service.register($scope);
+        }
+        
+    }]);
    
     app.factory('commonData', function(){
         return {
             type : 'commonData',
             users : [{username:'www', password:'111111'}],
             state : 0,
+            user : {},
             stockCodes : []
         };
 
     })
 
     app.controller('indexController', 
-        ['$scope', 'LocationService','commonData',
-        function ($scope, LocationService, commonData) {
-        Parse.initialize("tToszonEakDELCSvlhz7KuuUYaRfcHuh6u4sQMcL", "vCzJwES1RqhEvtlaxFpgJF6Kn8kpBG2XtqCuV3Nx");     
+        ['$scope','commonData',
+        function ($scope, commonData) {
         $scope.commonData = commonData;
         $scope.loginOut = function(){
         $scope.commonData.state = 0;
-
-            console.log("gurdjief");
+            // console.log("gurdjief");
         };
     }]);
 
     app.controller('otherController', 
-        ['$scope', 'LocationService','commonData',
-        function ($scope, LocationService, commonData) {
-
-    
-
-
+        ['$scope', 'Service','commonData',
+        function ($scope, Service, commonData) {
     }]);
 
 
     app.controller('newController', 
-        ['$scope','$location', 'LocationService','commonData','cfpLoadingBar',
-        function ($scope, $location, LocationService, commonData,cfpLoadingBar) {
-
-        $scope.commonData = commonData;
-        $scope.createNewOne = function(){
-            console.log($scope.data)
-            // $scope.$apply(function(){
-            $scope.commonData.stockCodes.push({
-            code:$scope.data.code,
-            market:$scope.data.market,
-            price:$scope.data.price*700,
-            vibration:$scope.data.vibration*100,
-          });
-        cfpLoadingBar.start();
-        setTimeout(function(){
-             $location.path('/content');
-                cfpLoadingBar.complete();
-             }, 8000);
-
-
-        var Stock = Parse.Object.extend("Stock");
-        var stock = new Stock();
-        stock.save({
-            code:$scope.data.code,
-            market:$scope.data.market,
-            price:$scope.data.price*700,
-            vibration:$scope.data.vibration*100,
-          }).then(function(object) {
-          // alert("yay! it worked");
-        });
-        };
-
-    
-
-
+        ['$scope','$location', 'Service','commonData',
+        function ($scope, $location, Service, commonData) {
     }]);
 
     app.controller('homeController', 
-        ['$scope', 'LocationService',
-        function ($scope, LocationService) {
+        ['$scope', 'Service',
+        function ($scope, Service) {
 
        
 
@@ -193,81 +235,13 @@ app.config(['$routeProvider',
 
 
     app.controller('contentController', 
-        ['$scope', 'LocationService','commonData','NgTableParams',
-        function ($scope, LocationService, commonData, NgTableParams) {
-
+        ['$scope', 'Service','commonData',
+        function ($scope, Service, commonData) {
         $scope.commonData = commonData;
-        $scope.stockCodes = [];
-
-         LocationService.getStockCodes().success(function(data){
-            if ($scope.commonData.stockCodes.length == 0) {
-                $scope.commonData.stockCodes = data;
-            };
-            $scope.data = $scope.commonData.stockCodes;
-
-
-            $scope.tableParams = new NgTableParams({
-                page: 1,            // show first page
-                count: 10           // count per page
-            }, {
-                total: $scope.data.length, // length of data
-                getData: function($defer, params) {
-                    $defer.resolve($scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                }
-            });
-        })
-
-
-        var findIndex = function (code) {
-            var index = -1;
-
-            angular.forEach($scope.commonData.stockCodes, function (item, key) {
-                if (item.code === code) {
-                    console.log(code)
-                                        console.log(key)
-
-                    index = key;
-                    return;
-                }
-            });
-
-            return index;
-        }
-
-        var resetTableParams = function(){
-
-            return {
-                    total: $scope.data.length, // length of data
-                    getData: function($defer, params) {
-                        $defer.resolve($scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                }
-            }
-        }
-
-        $scope.remove = function (id) {
-            var index = findIndex(id);
-            console.log(index)
-            if (index !== -1) {
-                $scope.commonData.stockCodes.splice(index, 1);
-
-
-
-                $scope.tableParams = new NgTableParams({
-                page: 1,            // show first page
-                count: 10           // count per page
-            }, 
-               resetTableParams()); 
-            }
-        }
-
-        $scope.averagePrice = function () {
-            var total = 0;
-            angular.forEach($scope.commonData.stockCodes, function (item) {
-                total += item.price;
-            })
-            return total/($scope.commonData.stockCodes.length);
-        }
-
+         Service.getDiaries($scope);
+        $scope.delete = function(id){
+        Service.deleteDiary(id, $scope)
+    };
     }]);
 
 
@@ -275,55 +249,12 @@ app.config(['$routeProvider',
 
 
     app.controller('loginController', 
-        ['$scope', '$location','LocationService','commonData','cfpLoadingBar',
-        function ($scope,  $location, LocationService, commonData,cfpLoadingBar) {
-
+        ['$scope', '$location','Service','commonData',
+        function ($scope,  $location, Service, commonData) {
         $scope.commonData = commonData;
-
         $scope.login = function(){
-        var loginState = 0;
-
-        var user = new Parse.User();
-       cfpLoadingBar.start();
-
-        Parse.User.logIn($scope.data.username, $scope.data.password, {
-          success: function(user) {
-            alert("success");
-             $scope.commonData.state = 1
-                loginState = 1;
-                setTimeout(function(){
-                 $location.path('/content');
-                    cfpLoadingBar.complete();
-                 }, 500);
-                 return;
-          },
-          error: function(user, error) {
-                alert("fail: " +  " " + error.message);
-          }
-        });
-
-        
-         
-        angular.forEach($scope.commonData.users, function (obj) {
-            // if ($scope.data.username === obj.username
-            //     && $scope.data.password === obj.password) {
-
-            //     $scope.commonData.state = 1
-            //     loginState = 1;
-            //     cfpLoadingBar.start();
-            //     setTimeout(function(){
-            //      $location.path('/content');
-            //         cfpLoadingBar.complete();
-            //      }, 1000);
-            //      return;
-
-            // }
-            })
-        // console.log($scope.commonData.state);
-        if (loginState != 1) {
-            // alert("username or password is wrong!");
-        }
-
+        // console.log('http://192.168.43.51:8080/DiaryS/rest/api/userlog/'+user.username+"/"+user.password);
+        Service.login($scope)
     };
 
        
@@ -331,8 +262,8 @@ app.config(['$routeProvider',
     }]);
 
     app.controller('homeController', 
-        ['$scope', 'LocationService',
-        function ($scope, LocationService) {
+        ['$scope', 'Service',
+        function ($scope, Service) {
 
        
 
@@ -340,78 +271,4 @@ app.config(['$routeProvider',
 
 
 
-    app.controller('registrationController', 
-        ['$scope', '$location','LocationService','commonData','cfpLoadingBar',
-        function ($scope,$location, LocationService, commonData,cfpLoadingBar) {
-
-        LocationService.getCities().success(function(data){
-            $scope.cities = data;
-        })
-
-        LocationService.getHobbies().success(function(data){
-            $scope.hobbies = data;
-        })
-
-        $scope.commonData = commonData;
-
-
-        
-
-        $scope.users = [];
-        $scope.register = function(){
-          $scope.commonData.users.push({
-            username:$scope.data.username,
-            email:$scope.data.email,
-            sex:$scope.data.sex,
-            statement:$scope.data.statement,
-            blog:$scope.data.blog,
-            age:$scope.data.age,
-            password:$scope.data.password
-
-          });
-            // $scope.myForm.$setPristine();
-            $scope.commonData.state = 1
-             cfpLoadingBar.start();
-                setTimeout(function(){
-                 $location.path('/content');
-                    cfpLoadingBar.complete();
-        }, 500);
-
-
-            var user = new Parse.User();
-            user.set("username", $scope.data.username);
-            user.set("password", $scope.data.password);
-            user.set("email", $scope.data.email);
-            user.set("blog", $scope.data.blog);
-            user.set("age", $scope.data.age);
-            user.set("sex", $scope.data.sex);
-            user.set("statement", $scope.data.statement);
-
- 
-            user.signUp(null, {
-              success: function(user) {
-                alert("success");
-              },
-              error: function(user, error) {
-                alert("fail: " +  " " + error.message);
-              }
-            });
-            user.save;
-            $scope.data = {
-                // hobbies: [1, 2],
-                // city: 3
-            };
-        }
-        
-        
-
-
-        $scope.origData = angular.copy($scope.data);
-
-        $scope.reset = function(){
-            $scope.data = angular.copy($scope.origData);
-            // that.initCity();
-            
-        }
-
-    }]);
+    

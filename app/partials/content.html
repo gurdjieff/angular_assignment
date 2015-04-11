@@ -1,66 +1,29 @@
 
-<div class="col-sm-2">
-      
-
-    <div class="container">
-        
-    <input type="search" class="form-control" ng-model="search" placeholder="search by code"></input>
-      </div>
-
-     
-      <p><strong>Sort by:</strong> 
-
-      <select ng-model="orderProp">
-        <option value="price">price</option>
-        <option value="vibration">vibration rate</option>
-      </select>
-    </div> 
-    
-
 <div class="container">
-<p><strong>Page:</strong> {{tableParams.page()}}
-    <p><strong>Count per page:</strong> {{tableParams.count()}}
+    <h2>blogs<h2>
+</div>
+<div class="container">
 
         <!-- {{data}} -->
-        <table ng-table="tableParams" class="table ng-table-responsive">            <thead>
+        <table class="table ng-table-responsive">       
+             <thead>
+              <thead>
                 <tr>
-                    <th>code</th>
-                    <th>market</th>
-                    <th>price</th>
-                    <th>vibration rate</th>
-                    <th>operation</th>
+                    <th>title</th>
+                    <th>content</th>
                 </tr>
             </thead>
             <tbody>
-
-                <tr ng-repeat="stockCode in data | filter:{code:search} | orderBy:orderProp">
-                  {{orderProp}}
-                    <td>{{stockCode.code}}</td>
-                    <td>{{stockCode.market}}</td>
-                    <td>{{stockCode.price/700 | currency:" $ "}}</td>
-                    <td>{{stockCode.vibration/100.00}}%</td>
+                <tr ng-repeat="diary in diaries">
+                    <td> <a href="#/contentInfo/{{diary.Diary_text}}">
+                    {{diary.Diary_title}}</a></td>
+                    <td> <a href="#/contentInfo/{{diary.Diary_text}}">
+                    {{diary.Diary_text | limitTo:20}}</a></td>
                     <td>
-                        <button type="button" ng-click="remove(stockCode.code)" class="btn btn-danger">remove</button>
+                        <button type="button" ng-click="delete(diary.id)" class="btn btn-danger">delete</button>
                     </td>
-                </tr>
-                <tr>
-                    <td>
-                        total quantity
-                    </td>
-                    <td>
-                        {{commonData.stockCodes.length}}
-                    </td>
-                    <td>
-                        average price
-                    </td>
-                    <td>
-                        {{averagePrice()/700 | currency:" $ "}}
-                    </td>
-                    <td colspan="2">
-                      <a href="#/new">Create new one</a>
-                     </td>
                 </tr>
             </tbody>
         </table>
-
+</div>
         

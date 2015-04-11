@@ -36,88 +36,16 @@
             </div>
         </div>
 
-        <div class="form-group" ng-class="{'has-error':myForm.email.$dirty && myForm.email.$invalid}">
-            <label class="col-sm-2 control-label">email</label>
-            <div class="col-sm-10">
-                <input type="email" autocomplete="off" name="email" ng-required="true" ng-model="data.email" class="form-control" placeholder="email">
-                <div ng-show="myForm.email.$dirty && myForm.email.$error.email" class="alert alert-danger help-block">
-                    email format is incorrect
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group" ng-class="{'has-error':myForm.blog.$dirty && myForm.blog.$invalid}">
-            <label class="col-sm-2 control-label">website</label>
-            <div class="col-sm-10">
-                <input type="url" autocomplete="off" name="blog" ng-required="true" ng-model="data.blog" class="form-control" placeholder="website">
-                <div ng-show="myForm.blog.$dirty && myForm.blog.$error.url" class="alert alert-danger help-block">
-                    website format is incorrect
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group" ng-class="{'has-error':myForm.age.$dirty && myForm.age.$invalid}">
-            <label class="col-sm-2 control-label">age</label>
-            <div class="col-sm-10">
-                <input type="number" autocomplete="off" name="age" min="10" ng-required="true" ng-model="data.age" class="form-control" placeholder="age">
-                <div ng-show="myForm.age.$dirty && myForm.age.$error.min" class="alert alert-danger help-block">
-                    age must be at least 10
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">gender</label>
-            <div class="col-sm-10">
-                <label class="radio-inline">
-                    <input type="radio" ng-required="true" name="sex" ng-model="data.sex" value="1" /> male
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" ng-required="true" name="sex" ng-model="data.sex" value="0" /> female
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">hobby</label>
-            <div class="col-sm-10">
-                <label class="checkbox-inline" ng-repeat="hobby in hobbies">
-                    <input type="checkbox" ng-model="hobby.checked" name="hobby[]"/> {{hobby.name}}
-                </label>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">birth place</label>
-            <div class="col-sm-3">
-                <select class="form-control" ng-model="data.country" ng-options="c.Country as c.Country for c in cities | cityFilter:'country'"></select>
-            </div>
-            <div class="col-sm-3">
-                <select class="form-control" ng-show="data.country" ng-model="data.city" ng-options="c.city for c in cities | cityFilter:data.country"></select>
-            </div>
-            
-        </div>
-
         
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">personal statement</label>
 
         
-
-             <div class="col-sm-10">
-                <my-text-area ng-model="data.introduct">aaa</my-text-area>
-            </div>
-
-
-        </div>
 
 
         <div class="form-group">
            <div class="col-sm-offset-2 col-sm-10">
-               <button type="submit" class="btn btn-default" ng-disabled="myForm.$invalid || (!hobbies.0.checked && !hobbies.1.checked && !hobbies.2.checked) || !data.country || !data.city ">register</button>
-               <button type="reset" class="btn btn-default" ng-click="reset()">reset</button>
+               <button type="submit" class="btn btn-default" ng-disabled="myForm.$invalid">register</button>
+               
            </div>
 
         </div>
